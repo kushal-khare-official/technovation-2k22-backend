@@ -10,6 +10,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userType: {
+    type: String,
+    enum: ['participant', 'admin', 'coordinator', 'treasurer', 'spoc', 'ambassador'],
+    default: 'participant',
+    required: true,
+  },
+  collegeType:{
+    type: String,
+    enum: ['college','school'],
+    required: true,
+  },
   college: {
     type: String,
     required: true,
@@ -31,11 +42,24 @@ const userSchema = new mongoose.Schema({
     max: 9999999999,
     unique: true,
   },
-  reffered: {
+  
+  kitNo: {
     type: Number,
-    required: true,
-    default: 0,
+    unique:true,
+    required: false,
   },
+  kitTxnId: {
+    type: String,
+    unique:true,
+    required: false,
+  },
+  kitTxnStatus: {
+    type:String,
+    enum: ['pending','new', 'success','failed'],
+    required:false,
+    default:'new'
+  }
+
 })
 
 const User = mongoose.model('User', userSchema)
