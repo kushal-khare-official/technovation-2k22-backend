@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
-    enum: ['participant', 'admin', 'coordinator', 'treasurer', 'spoc', 'ambassador'],
+    enum: ['participant', 'admin', 'coordinator', 'treasurer', 'spoc'],
     default: 'participant',
     required: true,
   },
@@ -32,8 +32,8 @@ const userSchema = new mongoose.Schema({
   year: {
     type: Number,
     required: true,
-    min: 1,
-    max: 4,
+    enum:[1,2,3,4,9,10,11,12]
+    
   },
   mobile_number: {
     type: Number,
@@ -58,6 +58,10 @@ const userSchema = new mongoose.Schema({
     enum: ['pending','new', 'success','failed'],
     required:false,
     default:'new'
+  },
+  tshirtSize: {
+    type:String,
+    required:false,
   }
 
 })
