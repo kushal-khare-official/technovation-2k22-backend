@@ -12,6 +12,7 @@ router.post("/", async function (req, res, next) {
       description: req.body.description,
       coordinators: req.body.coordinators,
       name: req.body.name,
+      teamType: req.body.teamType
     });
     await event.save();
 

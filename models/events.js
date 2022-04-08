@@ -21,6 +21,10 @@ const eventSchema = new mongoose.Schema({
   coordinators: {
       type: Array,
       required: false
+  },
+  teamType: {
+    type:String,
+    required:true
   }
   
 
