@@ -9,6 +9,7 @@ router.post("/", async function (req, res, next) {
     const user = new User({
       uid: req.body.uid,
       name: req.body.name,
+      email: req.body.email,
       userType: req.body.userType,
       collegeType: req.body.collegeType,
       college: req.body.college,
@@ -59,6 +60,7 @@ router.put("/", async function (req, res, next) {
       { uid: req.body.uid },
       {
         name: userOld.name,
+        email: req.body.email,
         userType: userOld.userType,
         collegeType: userOld.collegeType,
         college: userOld.college,
