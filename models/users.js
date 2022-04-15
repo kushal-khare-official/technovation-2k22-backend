@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
   year: {
     type: Number,
     required: true,
-    enum:[1,2,3,4,9,10,11,12]
+    enum:[0, 1,2,3,4,9,10,11,12]
     
   },
   mobile_number: {

@@ -1,86 +1,85 @@
-const express = require("express");
-const User = require("../models/users.js");
-const router = express.Router();
+const express = require('express')
+const User = require('../models/users.js')
+const router = express.Router()
 
-/* GET users listing. */
-
-router.post("/", async function (req, res, next) {
+router.get('/', async function (req, res, next) {
   try {
-    const user = new User({
-      uid: req.body.uid,
-      name: req.body.name,
-      email: req.body.email,
-      userType: req.body.userType,
-      collegeType: req.body.collegeType,
-      college: req.body.college,
-      branch: req.body.branch,
-      year: req.body.year,
-      mobile_number: req.body.mobile_number,
-      kitNo: req.body.kitNo,
-      kitTxnId: req.body.kitTxnId,
-      kitTxnStatus: req.body.kitTxnStatus,
-      tshirtSize: req.body.tshirtSize,
-    });
-    await user.save();
-    //   const rid = req.body.rid
-    //   const rUserOld = await User.findOne({ uid: rid }).exec()
-    //   await User.updateOne({ uid: rid }, { reffered: rUserOld.reffered + 1 })
-    return res.send(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send(err);
-  }
-});
+    const rid = req.header('rid')
+    const rUser = await User.findOne({ uid: rid }).exec()
 
-router.get("/", async function (req, res, next) {
-  try {
-    const rid = req.header("rid");
-    const rUser = await User.findOne({ uid: rid }).exec();
+    if (!rUser || !rUser.userType)
+      return res.status(200).send({ error: 'User Not Found' })
 
-    if (!rUser || !rUser.userTYpe) return res.status(200).send(null);
-
-    if (rUser.userType === "participant") return res.status(200).send(rUser);
+    if (rUser.userType === 'participant') return res.status(200).send(rUser)
 
     const users = req.query.kitNo
       ? await User.find({ kitNo: req.query.kitNo }).exec()
       : req.query.name
       ? User.find({ name: req.query.name }).exec()
-      : await User.find().exec();
+      : await User.find().exec()
 
-    return res.send(users);
+    return res.send(users)
   } catch (err) {
-    return res.status(500).send(err);
+    return res.status(500).send(err)
   }
-});
+})
 
-router.put("/", async function (req, res, next) {
+router.post('/', async function (req, res, next) {
   try {
-    const userOld = User.findOne({ uid: req.body.uid }).exec();
+    console.log(req.body)
+    const user = new User({
+      uid: req.body.uid,
+      name: req.body.name,
+      userType: req.body.userType || 'participant',
+      collegeType: req.body.collegeType || 'college',
+      college: req.body.college || 'null',
+      branch: req.body.branch || 'null',
+      year: req.body.year || 0,
+      mobile_number: req.body.mobile_number || 1000000000,
+    })
+    await user.save()
+    return res.send(user)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send(err)
+  }
+})
+
+router.put('/form', async function (req, res, next) {
+  try {
     await User.updateOne(
       { uid: req.body.uid },
       {
-        name: userOld.name,
-        email: req.body.email,
-        userType: userOld.userType,
-        collegeType: userOld.collegeType,
-        college: userOld.college,
-        branch: userOld.branch,
-        year: userOld.year,
-        mobile_number: userOld.mobile_number,
+        collegeType: req.body.collegeType,
+        college: req.body.college,
+        branch: req.body.branch,
+        year: req.body.year,
+        mobile_number: req.body.mobile_number,
+      }
+    ).lean()
+    return res.send(req.body.uid)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send(err)
+  }
+})
+
+router.put('/form2', async function (req, res, next) {
+  try {
+    const userOld = User.findOne({ uid: req.body.uid }).exec()
+    await User.updateOne(
+      { uid: req.body.uid },
+      {
         kitNo: userOld.kitNo,
         kitTxnId: req.body.kitTxnId,
         kitTxnStatus: req.body.kitTxnStatus,
         tshirtSize: req.body.tshirtSize,
       }
-    ).lean();
-    //   const rid = req.body.rid
-    //   const rUserOld = await User.findOne({ uid: rid }).exec()
-    //   await User.updateOne({ uid: rid }, { reffered: rUserOld.reffered + 1 })
-    return res.send(req.body.uid);
+    ).lean()
+    return res.send(req.body.uid)
   } catch (err) {
-    console.log(err);
-    return res.status(500).send(err);
+    console.log(err)
+    return res.status(500).send(err)
   }
-});
-
-module.exports = router;
+})
+module.exports = router
