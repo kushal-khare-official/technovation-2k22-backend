@@ -25,6 +25,12 @@ const eventSchema = new mongoose.Schema({
   teamType: {
     type:String,
     required:true
+  },
+  category: {
+    type:String,
+    enum:['technical','non-technical','gaming','literary'],
+    required:true,
+    default:'technical'
   }
   
 
